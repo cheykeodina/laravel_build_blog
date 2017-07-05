@@ -47,6 +47,6 @@ $factory->define(App\Reply::class, function (Faker\Generator $faker) {
         'title' => $faker->sentence,
         'body' => $faker->paragraph
     ];
-});
+    });
 
 
