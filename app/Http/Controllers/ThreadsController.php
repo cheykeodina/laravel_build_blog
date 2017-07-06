@@ -25,9 +25,9 @@ class ThreadsController extends Controller
      */
     public function index(Channel $channel)
     {
-        if($channel->exists){
+        if ($channel->exists) {
             $threads = $channel->threads()->latest()->get();
-        }else{
+        } else {
             $threads = Thread::latest()->get();
         }
         return view('threads.index', compact('threads'));
@@ -51,6 +51,11 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels,id'
+        ]);
         $thread = Thread::create([
             'title' => request('title'),
             'body' => request('body'),
