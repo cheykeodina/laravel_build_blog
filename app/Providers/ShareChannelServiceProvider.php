@@ -16,12 +16,12 @@ class ShareChannelServiceProvider extends ServiceProvider
     public function boot()
     {
         // Method 1 user composer method
-//        View::composer('*', function ($view) {
-//            $view->with('channels', Channel::all());
-//        });
+        View::composer('*', function ($view) {
+            $view->with('channels', Channel::all());
+        });
 
         // Method 2 use shareWith Method
-        View::share('channels', Channel::all());
+//        View::share('channels', Channel::all());
     }
 
     /**
