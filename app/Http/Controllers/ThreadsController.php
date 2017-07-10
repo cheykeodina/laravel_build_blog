@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadFilters;
 use App\Thread;
 use App\User;
 use Illuminate\Http\Request;
@@ -21,22 +22,13 @@ class ThreadsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param $channel
+     * @param Channel $channel
+     * @param ThreadFilters $filters
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel)
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-        if ($channel->exists) {
-            $threads = $channel->threads()->latest();
-        } else {
-            $threads = Thread::latest();
-        }
-        if ($username = \request('by')) {
-            $user = User::where('name', $username)->firstOrFail();
-            $threads = Thread::where('user_id', $user->id);
-        }
-
-        $threads = $threads->get();
+        $threads = $this->getThreads($channel, $filters);
         return view('threads.index', compact('threads'));
     }
 
@@ -45,7 +37,8 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public
+    function create()
     {
         return view('threads.create');
     }
@@ -56,7 +49,8 @@ class ThreadsController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public
+    function store(Request $request)
     {
         $this->validate($request, [
             'title' => 'required',
@@ -79,7 +73,8 @@ class ThreadsController extends Controller
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channelSlug, Thread $thread)
+    public
+    function show($channelSlug, Thread $thread)
     {
         return view('threads.show', compact('thread'));
 
@@ -91,7 +86,8 @@ class ThreadsController extends Controller
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function edit(Thread $thread)
+    public
+    function edit(Thread $thread)
     {
         //
     }
@@ -103,7 +99,8 @@ class ThreadsController extends Controller
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public
+    function update(Request $request, Thread $thread)
     {
         //
     }
@@ -114,8 +111,24 @@ class ThreadsController extends Controller
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
+    public
+    function destroy(Thread $thread)
     {
         //
+    }
+
+    /**
+     * @param Channel $channel
+     * @param ThreadFilters $filters
+     * @return mixed
+     */
+    protected function getThreads(Channel $channel, ThreadFilters $filters)
+    {
+        $threads = Thread::latest()->filter($filters);
+        if ($channel->exists) {
+            $threads = $channel->threads()->latest();
+        }
+        $threads = $threads->get();
+        return $threads;
     }
 }
