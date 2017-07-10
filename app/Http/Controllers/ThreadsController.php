@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
-use App\User;
 use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
@@ -29,6 +28,9 @@ class ThreadsController extends Controller
     public function index(Channel $channel, ThreadFilters $filters)
     {
         $threads = $this->getThreads($channel, $filters);
+        if (request()->wantsJson()) {
+            return $threads;
+        }
         return view('threads.index', compact('threads'));
     }
 
@@ -76,7 +78,8 @@ class ThreadsController extends Controller
     public
     function show($channelSlug, Thread $thread)
     {
-        return view('threads.show', compact('thread'));
+        // add pagination to replies
+        return view('threads.show', ['thread' => $thread, 'replies' => $thread->replies()->paginate(20)]);
 
     }
 
@@ -128,6 +131,8 @@ class ThreadsController extends Controller
         if ($channel->exists) {
             $threads = $channel->threads()->latest();
         }
+        // to see sql for query
+//        dd($threads->toSql());
         $threads = $threads->get();
         return $threads;
     }
