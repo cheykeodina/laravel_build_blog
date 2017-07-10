@@ -24,6 +24,8 @@ Route::get('/threads/{channel}', 'ThreadsController@index');
 // User Thread Resource Routes
 ///Route::resource('threads', 'ThreadsController');
 
+// replies
+Route::post('/replies/{reply}/favorites', 'FavoritesController@store');
 
 Auth::routes();
 
