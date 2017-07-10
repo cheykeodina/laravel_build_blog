@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     protected $guarded = [];
+    // App\Thread::withoutGlobalScopes()->first(); is not working with ths pattern
+    protected $with = ['creator', 'channel', 'replies'];
 
     protected static function boot()
     {
@@ -15,6 +17,10 @@ class Thread extends Model
         static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
+        // App\Thread::withoutGlobalScopes()->first(); is working with this pattern
+        /*static::addGlobalScope('creator', function ($builder) {
+            $builder->with('creator');
+        });*/
     }
 
 

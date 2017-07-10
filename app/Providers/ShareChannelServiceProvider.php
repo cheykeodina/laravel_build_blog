@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Channel;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +18,10 @@ class ShareChannelServiceProvider extends ServiceProvider
     {
         // Method 1 user composer method
         View::composer('*', function ($view) {
-            $view->with('channels', Channel::all());
+            $channels = Cache::rememberForever('channels', function(){
+               return Channel::all();
+            });
+            $view->with('channels', $channels);
         });
 
         // Method 2 use shareWith Method
