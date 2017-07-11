@@ -26,4 +26,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // override default route key name id
+    // easy for route model binding
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class)->latest();
+    }
 }
