@@ -111,13 +111,24 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Channel $channel
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public
-    function destroy(Thread $thread)
+    function destroy(Channel $channel, Thread $thread)
     {
-        //
+        if ($thread->user_id != auth()->id()) {
+            if (request()->wantsJson()) {
+                return response(['status' => 'Permission Deny'], 200);
+            }
+            return redirect('/login');
+        }
+        $thread->delete();
+        if (request()->wantsJson()) {
+            return response([], 200);
+        }
+        return redirect('/threads');
     }
 
     /**

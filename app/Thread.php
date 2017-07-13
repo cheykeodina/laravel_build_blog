@@ -21,6 +21,11 @@ class Thread extends Model
         /*static::addGlobalScope('creator', function ($builder) {
             $builder->with('creator');
         });*/
+
+        // when deleting a thread it must delete all associated replies
+        static::deleting(function ($thread) {
+            $thread->replies()->delete();
+        });
     }
 
 

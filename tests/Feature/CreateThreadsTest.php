@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
 use App\Thread;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class CreateThreadsTest extends TestCase
@@ -42,4 +44,30 @@ class CreateThreadsTest extends TestCase
         $this->get($thread->path())->assertSee($thread->title)->assertSee($thread->body);
 
     }
+
+    /** @test */
+    public function authorized_user_can_delete_thread()
+    {
+        $user = $this->signIn();
+        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+        $response = $this->json('DELETE', $thread->path());
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+    }
+
+    /** @test */
+    public function unauthorized_user_may_not_delete_a_thread()
+    {
+        $this->withExceptionHandling();
+        $thread = create(Thread::class);
+        $this->delete($thread->path())->assertRedirect('/login');
+
+        $user = $this->signIn();
+        $this->delete($thread->path())->assertRedirect('/login');
+
+    }
+
+
 }
