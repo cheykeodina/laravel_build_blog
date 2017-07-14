@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use RecordActivity;
     protected $guarded = [];
     // App\Thread::withoutGlobalScopes()->first(); is not working with ths pattern
     protected $with = ['creator', 'channel', 'replies'];
@@ -26,8 +27,13 @@ class Thread extends Model
         static::deleting(function ($thread) {
             $thread->replies()->delete();
         });
-    }
 
+        // create activity when thread is created
+//        static::created(function ($thread) {
+//            $thread->recordActivity('created');
+//
+//        });
+    }
 
     public function path()
     {

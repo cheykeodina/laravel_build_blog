@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
+    use RecordActivity;
     protected $guarded = [];
     protected $with = ['owner', 'favorites'];
 
