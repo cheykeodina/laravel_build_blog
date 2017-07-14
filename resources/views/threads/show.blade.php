@@ -10,11 +10,13 @@
                                     href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
                             posted:{{ $thread->title }}</h3>
                         @if(auth()->check())
-                            <form action="{{ $thread->path() }}" method="post">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-                                <button type="submit" class="btn btn-link">Delete thread</button>
-                            </form>
+                            @can('update', $thread)
+                                <form action="{{ $thread->path() }}" method="post">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+                                    <button type="submit" class="btn btn-link">Delete thread</button>
+                                </form>
+                            @endcan
                         @endif
                     </div>
                     <div class="panel-body">
@@ -26,6 +28,7 @@
                 @endforeach
                 {{ $replies->links() }}
                 @if(auth()->check())
+                    @can('update', $thread)
                     <form action="{{ $thread->path(). '/replies' }}" method="post">
                         {{ csrf_field() }}
                         <div class="form-group">
@@ -34,6 +37,7 @@
                         </div>
                         <button class="btn btn-default" type="submit">Post</button>
                     </form>
+                    @endcan
                 @else
                     <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this
                         discussion.

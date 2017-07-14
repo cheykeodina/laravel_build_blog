@@ -12,7 +12,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading" style="display: flex;align-items: center">
                     <h5 style="flex: 1;">
-                        <a href="/profiles/{{$thread->creator->name}}">{{ $thread->creator->name }}</a> posted:{{ $thread->title }}
+                        <a href="/profiles/{{$thread->creator->name}}">{{ $thread->creator->name }}</a> posted:
+                        <a href="{{ $thread->path()}}">{{ $thread->title }}</a>
                         <strong>{{$thread->created_at->diffForHumans() }}</strong>
                     </h5>
                     @if(auth()->check())

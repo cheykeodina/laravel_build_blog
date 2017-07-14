@@ -65,7 +65,7 @@ class CreateThreadsTest extends TestCase
         $this->delete($thread->path())->assertRedirect('/login');
 
         $user = $this->signIn();
-        $this->delete($thread->path())->assertRedirect('/login');
+        $this->delete($thread->path())->assertStatus(403);
 
     }
 
