@@ -6,9 +6,10 @@
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="display: flex; align-items: center">
-                        <h5 style="flex: 1"><a
-                                    href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
-                            posted:{{ $thread->title }}</h5>
+                        <h5 style="flex: 1">
+                            <a href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
+                            posted:{{ $thread->title }}
+                        </h5>
                         @if(auth()->check())
                             @can('update', $thread)
                                 <form action="{{ $thread->path() }}" method="post">

@@ -7,6 +7,7 @@ trait RecordActivity
 
     // automatically run this function when we call this trait
     // convention bootFilename
+    // special function
     protected static function bootRecordActivity()
     {
         if (auth()->guest()) {
@@ -21,7 +22,7 @@ trait RecordActivity
 
     protected static function getActivitiesToRecord()
     {
-        return ['created', 'deleted'];
+        return ['created'];
     }
 
     protected function recordActivity($event)
