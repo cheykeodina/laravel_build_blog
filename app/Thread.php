@@ -25,7 +25,15 @@ class Thread extends Model
 
         // when deleting a thread it must delete all associated replies
         static::deleting(function ($thread) {
-            $thread->replies()->delete();
+            // Because reply has the trigger event when deleting record use RecordActivity trait
+            // so delete replies must be one by one with reply instance
+//            $thread->replies()->delete();
+            // method 1
+//            $thread->replies->each(function ($reply) {
+//                $reply->delete();
+//            });
+            // method 2
+            $thread->replies->each->delete();
         });
 
         // create activity when thread is created
