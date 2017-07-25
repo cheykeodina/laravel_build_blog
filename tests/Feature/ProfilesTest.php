@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
@@ -21,9 +22,8 @@ class ProfilesTest extends TestCase
     /** @test */
     public function profiles_display_all_threads_created_by_associated_user()
     {
-        $user = create(User::class);
-        $thread = create(Thread::class, ['user_id' => $user->id]);
-
-        $this->get("/profiles/{$user->name}")->assertSee($thread->title)->assertSee($thread->body);
+        $this->signIn();
+        $thread = create(Thread::class, ['user_id' => auth()->id()]);
+        $this->get("/profiles/".auth()->user()->name)->assertSee($thread->title)->assertSee($thread->body);
     }
 }
