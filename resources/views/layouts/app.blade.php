@@ -17,6 +17,7 @@
 <div id="app">
     @include('layouts.nav')
     @yield('content')
+    <flash message="this is flash"></flash>
 </div>
 
 <!-- Scripts -->
