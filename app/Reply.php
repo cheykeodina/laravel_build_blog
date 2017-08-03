@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Reply extends Model
 {
@@ -41,5 +42,10 @@ class Reply extends Model
     public function thread()
     {
         return $this->belongsTo(Thread::class);
+    }
+
+    public function path()
+    {
+        return $this->thread->path()."#reply-{$this->id}";
     }
 }
